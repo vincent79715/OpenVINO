@@ -71,7 +71,7 @@ def main():
         ret, frame = cap.read()
 
         img = cv2.resize(frame, (Nw, Nh))
-        if Nc==1: frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY).reshape(Nh, Nw, 1)
+        if Nc==1: img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY).reshape(Nh, Nw, 1)
         img = img.transpose((2, 0, 1)).reshape(Nn, Nc, Nh, Nw)
         res = exec_net.infer(inputs={input_blob: img})[out_blob][0]
         probs = np.squeeze(res)
