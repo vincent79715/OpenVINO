@@ -54,7 +54,7 @@ def getmodel(model_xml,model_bin,device,cpu_extension,labels,log):
     else:
         labels_map = None
     return ie,net,input_blob,out_blob,exec_net,labels_map
-
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 def main():
     log.basicConfig(format="[ %(levelname)s ] %(message)s", level=log.INFO, stream=sys.stdout)
     args = build_argparser().parse_args()
