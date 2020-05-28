@@ -76,10 +76,7 @@ def main():
         res = exec_net.infer(inputs={input_blob: img})[out_blob][0]
         probs = np.squeeze(res)
         top_ind = np.argsort(probs)[::-1]
-        if labels_map is None:
-            label = str(top_ind[0])
-        else:
-            label = labels_map[top_ind[0]]
+        label = labels_map[top_ind[0]] if labels_map else '#{}'.format(top_ind[0])
 
         cv2.putText(frame, label+":"+str(probs[top_ind[0]]*100)[:5]+"%", (10, 40), cv2.FONT_HERSHEY_SIMPLEX,1, (0, 255, 255), 1, cv2.LINE_AA)
         cv2.imshow('frame', frame)
