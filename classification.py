@@ -11,9 +11,10 @@ def build_argparser():
     args = parser.add_argument_group('Options')
     args.add_argument('-h', '--help', action='help', default=SUPPRESS, help='Show this help message and exit.')
     args.add_argument("-m", "--model", help="Required. Path to an .xml file with a trained model.", required=True,type=str)
+    args.add_argument("-i", "--input", help="Path to an image/video file.Default value is cam", default="cam", type=str)
     args.add_argument("-l", "--cpu_extension",help="Optional. Required for CPU custom layers. ", type=str, default=None)
     args.add_argument("-d", "--device",help="CPU, GPU, FPGA, HDDL, MYRIAD or HETERO .Default value is CPU",default="CPU", type=str)
-    args.add_argument("--labels", help="Optional. Path to a labels mapping file", default=None, type=str)
+    args.add_argument("-lb", "--labels", help="Optional. Path to a labels mapping file", default=None, type=str)
     args.add_argument("-nt", "--number_top", help="Optional. Number of top results", default=10, type=int)
 
     return parser
@@ -61,15 +62,18 @@ def main():
 
     model_xml = args.model
     model_bin = os.path.splitext(model_xml)[0] + ".bin"
-    ie,net,input_blob,out_blob,exec_net,labels_map = getmodel(model_xml,model_bin,args.device,args.cpu_extension,args.labels,log)
+    model_labels = os.path.splitext(model_xml)[0] + ".txt"
+    labels = model_labels if os.path.exists(model_labels) else args.labels
+    ie,net,input_blob,out_blob,exec_net,labels_map = getmodel(model_xml,model_bin,args.device,args.cpu_extension,labels,log)
     Nn, Nc, Nh, Nw = net.inputs[input_blob].shape
-
-    cap = cv2.VideoCapture(0)
+ 
+    input_stream = 0 if args.input == "cam" else args.input
+    cap = cv2.VideoCapture(input_stream)
     lastkey=0
-    
-    while lastkey!=27 :
-        ret, frame = cap.read()
 
+    while cap.isOpened() and lastkey!=27 :
+        ret, frame = cap.read()
+        if not ret: break
         img = cv2.resize(frame, (Nw, Nh))
         if Nc==1: img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).reshape(Nh, Nw, 1)
         img = img.transpose((2, 0, 1)).reshape(Nn, Nc, Nh, Nw)
@@ -79,8 +83,7 @@ def main():
         label = labels_map[No1] if labels_map else '#{}'.format(No1)
 
         cv2.putText(frame, '{}:{:.2f}%'.format(label, probs[No1]*100), (10, 40), cv2.FONT_HERSHEY_SIMPLEX,1, (0, 0, 0), 1, cv2.LINE_AA)
-        cv2.imshow('frame', frame)
-
+        cv2.imshow('Inference', frame)
         lastkey = cv2.waitKey(1)
 
     cap.release()
