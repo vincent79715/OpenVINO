@@ -15,7 +15,6 @@ def build_argparser():
     args.add_argument("-l", "--cpu_extension",help="Optional. Required for CPU custom layers. ", type=str, default=None)
     args.add_argument("-d", "--device",help="CPU, GPU, FPGA, HDDL, MYRIAD or HETERO .Default value is CPU",default="CPU", type=str)
     args.add_argument("-lb", "--labels", help="Optional. Path to a labels mapping file", default=None, type=str)
-    args.add_argument("-nt", "--number_top", help="Optional. Number of top results", default=10, type=int)
 
     return parser
 
@@ -84,8 +83,10 @@ def main():
 
         cv2.putText(frame, '{}:{:.2f}%'.format(label, probs[No1]*100), (10, 40), cv2.FONT_HERSHEY_SIMPLEX,1, (0, 0, 0), 1, cv2.LINE_AA)
         cv2.imshow('Inference', frame)
+        lastframe = frame.copy()
         lastkey = cv2.waitKey(1)
 
+    cv2.imwrite("prediction.jpg",lastframe)
     cap.release()
     cv2.destroyAllWindows()
 
