@@ -75,10 +75,10 @@ def main():
         img = img.transpose((2, 0, 1)).reshape(Nn, Nc, Nh, Nw)
         res = exec_net.infer(inputs={input_blob: img})[out_blob][0]
         probs = np.squeeze(res)
-        top_ind = np.argsort(probs)[::-1]
-        label = labels_map[top_ind[0]] if labels_map else '#{}'.format(top_ind[0])
+        No1 = np.argsort(probs)[::-1][0]
+        label = labels_map[No1] if labels_map else '#{}'.format(No1)
 
-        cv2.putText(frame, label+":"+str(probs[top_ind[0]]*100)[:5]+"%", (10, 40), cv2.FONT_HERSHEY_SIMPLEX,1, (0, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(frame, '{}:{:.2f}%'.format(label, probs[No1]*100), (10, 40), cv2.FONT_HERSHEY_SIMPLEX,1, (0, 0, 0), 1, cv2.LINE_AA)
         cv2.imshow('frame', frame)
 
         lastkey = cv2.waitKey(1)
