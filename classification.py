@@ -62,7 +62,7 @@ def main():
     model_xml = args.model
     model_bin = os.path.splitext(model_xml)[0] + ".bin"
     model_labels = os.path.splitext(model_xml)[0] + ".txt"
-    labels = model_labels if os.path.exists(model_labels) else args.labels
+    labels = args.labels if args.labels else (model_labels if os.path.exists(model_labels) else None )
     ie,net,input_blob,out_blob,exec_net,labels_map = getmodel(model_xml,model_bin,args.device,args.cpu_extension,labels,log)
     Nn, Nc, Nh, Nw = net.inputs[input_blob].shape
  
