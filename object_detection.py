@@ -83,7 +83,7 @@ def main():
         for obj in res:
             if obj[2] > args.prob_threshold:
                 xmin,ymin,xmax,ymax = np.int32(obj[3:]*[fw,fh,fw,fh])
-                index,prob = int(obj[1]-1),obj[2]*100
+                index,prob = int(obj[1]),obj[2]*100
                 label = labels_map[index] if labels_map else '#{}'.format(index)
                 cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (0,255,0), 2)
                 cv2.putText(frame, '{}:{:.2f}%'.format(label, prob), (xmin+5,ymin-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 1, cv2.LINE_AA)
