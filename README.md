@@ -9,7 +9,7 @@ python3 /opt/intel/openvino/deployment_tools/model_optimizer/mo_tf.py --transfor
 
 TX2  
 head -n 1 /etc/nv_tegra_release  
-# R32 (release), REVISION: 2.0, GCID: 15925399, BOARD: t186ref, EABI: aarch64, DATE: Sat Jul 13 07:31:45 UTC 2019  
+>> R32 (release), REVISION: 2.0, GCID: 15925399, BOARD: t186ref, EABI: aarch64, DATE: Sat Jul 13 07:31:45 UTC 2019  
 JetPack 4.2.1 
 L4T R32.2 (K4.9)
 Ubuntu 18.04 LTS aarch64
